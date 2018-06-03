@@ -64,5 +64,6 @@ const selector = [
 if(document.contentType === "text/plain")
 	selector.push("body, body *");
 
+document.body.style.tabSize = 4;
 unfuckTabstops(selector.join(", "));
 })();
