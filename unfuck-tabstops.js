@@ -1,4 +1,4 @@
-(function(){
+(function(preferredSize){
 	"use strict";
 
 	/**
@@ -73,6 +73,6 @@
 		return "";
 	})("TabSize");
 
-	document.body.style[TAB_SIZE] = 4;
+	document.body.style[TAB_SIZE] = +preferredSize || 4;
 	unfuckTabstops(selector.join(", "));
 })();
