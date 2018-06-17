@@ -11,8 +11,8 @@ Chrome extension someday, once I get sick of routinely pressing this bookmarklet
 each time I visit GitHub-hosted source code.
 
 
-Used on the following sites
----------------------------
+Works on the following sites
+----------------------------
 * [GitHub](https://github.com), including [gists](https://gist.github.com)
 * [Node.js API docs](https://nodejs.org/api/all.html)
 * [Stack Exchange sites](https://stackexchange.com/)
