@@ -64,6 +64,15 @@ const selector = [
 if(document.contentType === "text/plain")
 	selector.push("body, body *");
 
-document.body.style.tabSize = 4;
+// Name of the CSSOM property used by this browser for CSS's `tab-size` property
+const TAB_SIZE = (n => {
+	s = document.documentElement.style;
+	if((prop = n.toLowerCase()) in s) return prop;
+	for(var prop, s, p = "Webkit Moz Ms O Khtml", p = (p.toLowerCase() + p).split(" "), i = 0; i < 10; ++i)
+		if((prop = p[i]+n) in s) return prop;
+	return "";
+})("TabSize");
+
+document.body.style[TAB_SIZE] = 4;
 unfuckTabstops(selector.join(", "));
 })();
