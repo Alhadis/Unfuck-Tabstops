@@ -56,12 +56,27 @@
 		}
 	}
 
+	/**
+	 * Guess whether the loaded document is being rendered as plain-text.
+	 * @return {Boolean}
+	 * @internal
+	 */
+	function isPlainText(){
+		const {body} = document;
+		const all = body.querySelectorAll("*");
+		const pre = el => !!(/^pre(?:-wrap)?$/i.test(window.getComputedStyle(el).whiteSpace));
+		return !body.childElementCount && body.textContent && pre(body)
+			|| 1 === all.length && pre(all[0]);
+	}
+
+
 	const selector = [
 		".highlight > pre",
 		"table.highlight td.blob-num + .blob-code",
 		"pre > code",
 	];
-	if("text/plain" === document.contentType)
+
+	if(isPlainText())
 		selector.push("body, body *");
 
 	// Name of the CSSOM property used by this browser for CSS's `tab-size` property
