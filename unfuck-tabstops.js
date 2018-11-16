@@ -57,9 +57,8 @@
 		for(const block of document.querySelectorAll(selector)){
 			for(const node of collectTextNodes(block)){
 				const {data} = node;
-				const fixed = nbspStrip(data).replace(regexp, (_, nl, crap) => {
-					return nl + "\t".repeat(crap.length / width);
-				});
+				const fixed = nbspStrip(data).replace(regexp, (_, nl, crap) =>
+					nl + "\t".repeat(crap.length / width));
 				if(fixed !== data)
 					node.data = fixed;
 			}

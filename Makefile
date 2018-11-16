@@ -18,13 +18,7 @@ $(TARGET): $(SRC)
 
 # Check syntax of JS files
 lint:
-	eslint $(SRC)
-
-
-# Install required dependencies
-install:
-	@(command -v terser 2>&1 >/dev/null) || npm install -g terser
-	@(command -v eslint 2>&1 >/dev/null) || npm install -g eslint
+	npx eslint $(SRC)
 
 
 # Delete generated files
