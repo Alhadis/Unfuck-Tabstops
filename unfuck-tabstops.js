@@ -33,6 +33,16 @@
 			}
 		return nodes;
 	}
+	
+	
+	/**
+	 * Replace non-breaking spaces (U+00A0) with ordinary spaces (U+0020).
+	 * @param {String} input
+	 * @return {String}
+	 */
+	function nbspStrip(input){
+		return input.replace(/&nbsp;|&#0*160;|&#x0*A0;|\xA0/g, " ");
+	}
 
 
 	/**
@@ -47,7 +57,7 @@
 		for(const block of document.querySelectorAll(selector)){
 			for(const node of collectTextNodes(block)){
 				const {data} = node;
-				const fixed = data.replace(regexp, (_, nl, crap) => {
+				const fixed = nbspStrip(data).replace(regexp, (_, nl, crap) => {
 					return nl + "\t".repeat(crap.length / width);
 				});
 				if(fixed !== data)
@@ -71,8 +81,9 @@
 
 
 	const selector = [
-		".highlight > pre",
+		".highlight > pre > .line span:first-child:not(:only-child)",
 		"table.highlight td.blob-num + .blob-code",
+		".add-line-comment ~ .blob-code-inner",
 		"pre > code",
 	];
 
@@ -82,11 +93,14 @@
 	// Name of the CSSOM property used by this browser for CSS's `tab-size` property
 	const TAB_SIZE = (n => {
 		s = document.documentElement.style;
-		if((prop = n.toLowerCase()) in s) return prop; // eslint-disable-next-line
+		if((prop = n[0].toLowerCase() + n.slice(1)) in s) return prop; // eslint-disable-next-line
 		for(var prop, s, p = "Webkit Moz Ms O Khtml", p = (p.toLowerCase() + p).split(" "), i = 0; i < 10; ++i)
 			if((prop = p[i]+n) in s) return prop;
 		return "";
 	})("TabSize");
+
+	for(const el of document.querySelectorAll("[data-tab-size]"))
+		el.dataset.tabSize = el.style[TAB_SIZE] = +preferredSize || 4;
 
 	document.body.style[TAB_SIZE] = +preferredSize || 4;
 	unfuckTabstops(selector.join(", "));
