@@ -83,7 +83,7 @@
 		".highlight > pre > .line span:first-child:not(:only-child)",
 		"table.highlight td.blob-num + .blob-code",
 		".add-line-comment ~ .blob-code-inner",
-		"pre > code",
+		"pre, code, tt",
 	];
 
 	if(isPlainText())
