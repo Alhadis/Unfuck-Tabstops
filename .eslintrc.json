@@ -1,3 +1,4 @@
 {
-	"extends": "@alhadis"
+	"extends": "@alhadis",
+	"noInlineConfig": false
 }
