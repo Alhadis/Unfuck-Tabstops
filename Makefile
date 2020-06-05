@@ -26,4 +26,11 @@ clean:
 	rm -f $(TARGET) $(TARGET).?.tmp
 
 
+# Install required dependencies
+install:
+	@(command -v terser 2>&1 >/dev/null) || npm install -g terser
+	@(command -v eslint 2>&1 >/dev/null) || npm install -g eslint
+	npx eslint --print-config - 2>&1 >/dev/null || npm install -g @alhadis/eslint-config
+
+
 .PHONY: clean install
