@@ -81,6 +81,7 @@
 
 	const selector = [
 		".highlight > pre > .line span:first-child:not(:only-child)",
+		".prism-code .token-line > .token",
 		"table.highlight td.blob-num + .blob-code",
 		".add-line-comment ~ .blob-code-inner",
 		"pre, code, tt",
@@ -98,7 +99,7 @@
 		return "";
 	})("TabSize");
 
-	for(const el of document.querySelectorAll("[data-tab-size]"))
+	for(const el of document.querySelectorAll("[data-tab-size], .prism-code"))
 		el.dataset.tabSize = el.style[TAB_SIZE] = +preferredSize || 4;
 
 	document.body.style[TAB_SIZE] = +preferredSize || 4;
