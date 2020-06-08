@@ -82,7 +82,7 @@
 	const selector = [
 		".highlight > pre > .line span:first-child:not(:only-child)",
 		".prism-code .token-line > .token",
-		"table.highlight td.blob-num + .blob-code",
+		"td.blob-num + .blob-code",
 		".add-line-comment ~ .blob-code-inner",
 		"pre, code, tt",
 	];
