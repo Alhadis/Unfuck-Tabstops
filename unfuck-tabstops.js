@@ -108,7 +108,8 @@
 		.join("") + "\n}";
 	
 	for(const el of document.querySelectorAll("[style]"))
-		if(TAB_SIZE in el.style) el.style[TAB_SIZE] = +preferredSize || 4;
+		if([...el.style].includes("tab-size"))
+			el.style[TAB_SIZE] = +preferredSize || 4;
 	
 	unfuckTabstops(selector.join(", "));
 })();
