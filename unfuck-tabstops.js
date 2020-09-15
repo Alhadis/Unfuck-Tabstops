@@ -102,6 +102,13 @@
 	for(const el of document.querySelectorAll("[data-tab-size], .prism-code"))
 		el.dataset.tabSize = el.style[TAB_SIZE] = +preferredSize || 4;
 
-	document.body.style[TAB_SIZE] = +preferredSize || 4;
+	const style = document.head.appendChild(document.createElement("style"));
+	style.innerHTML = "*, *::before, *::after {\n" + ["-moz-", "-o-", ""]
+		.map(prefix => `${prefix}tab-size: ${+preferredSize || 4} !important;`)
+		.join("") + "\n}";
+	
+	for(const el of document.querySelectorAll("[style]"))
+		if(TAB_SIZE in el.style) el.style[TAB_SIZE] = +preferredSize || 4;
+	
 	unfuckTabstops(selector.join(", "));
 })();
