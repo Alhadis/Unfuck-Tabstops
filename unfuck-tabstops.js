@@ -102,10 +102,21 @@
 	for(const el of document.querySelectorAll("[data-tab-size], .prism-code"))
 		el.dataset.tabSize = el.style[TAB_SIZE] = +preferredSize || 4;
 
-	const style = document.head.appendChild(document.createElement("style"));
-	style.innerHTML = "*, *::before, *::after {\n" + ["-moz-", "-o-", ""]
-		.map(prefix => `${prefix}tab-size: ${+preferredSize || 4} !important;`)
-		.join("") + "\n}";
+	if(!document.styleSheets.length){
+		const el = document.head.appendChild(document.createElement("style"));
+		el.innerHTML = "*, *::before, *::after {\n" + ["-moz-", "-o-", ""]
+			.map(prefix => `${prefix}tab-size: ${+preferredSize || 4} !important`)
+			.join("; ") + "\n}";
+	}
+	else for(const sheet of document.styleSheets)
+		try{
+			for(const rule of [...sheet.rules])
+				if(rule instanceof CSSStyleRule && !Number.isNaN(+rule.style[TAB_SIZE]))
+					rule.style[TAB_SIZE] = +preferredSize || 4;
+		}
+		catch(e){
+			console.error(e);
+		}
 	
 	for(const el of document.querySelectorAll("[style]"))
 		if([...el.style].includes("tab-size"))
