@@ -46,23 +46,25 @@
 
 
 	/**
+	 * Cached regular expressions used for unfucking a specific tabstop size
+	 * @const {Object.<Number, RegExp>} cache
+	 * @internal
+	 */
+	const cache = {__proto__: null};
+
+
+	/**
 	 * Replace soft-tabs with the superior/logical alternative.
 	 *
-	 * @param {String} [selector]
+	 * @param {String} input
 	 * @param {Number} [width=2]
+	 * @return {String}
 	 * @main
 	 */
-	function unfuckTabstops(selector, width = 2){
-		const regexp = new RegExp(`(^|\\n)((?:${" ".repeat(width)})+)`, "g");
-		for(const block of document.querySelectorAll(selector)){
-			for(const node of collectTextNodes(block)){
-				const {data} = node;
-				const fixed = nbspStrip(data).replace(regexp, (_, nl, crap) =>
-					nl + "\t".repeat(crap.length / width));
-				if(fixed !== data)
-					node.data = fixed;
-			}
-		}
+	function unfuckTabstops(input, width = 2){
+		const regexp = cache[width] ||= new RegExp(`(^|\\n)((?:${" ".repeat(width)})+)`, "g");
+		return nbspStrip(input).replace(regexp, (_, nl, crap) =>
+			nl + "\t".repeat(crap.length / width));
 	}
 
 	/**
@@ -102,6 +104,9 @@
 	for(const el of document.querySelectorAll("[data-tab-size], .prism-code"))
 		el.dataset.tabSize = el.style[TAB_SIZE] = +preferredSize || 4;
 
+	for(const el of document.querySelectorAll("clipboard-copy[value]"))
+		el.value = unfuckTabstops(el.value);
+
 	if(!document.styleSheets.length){
 		const el = document.head.appendChild(document.createElement("style"));
 		el.innerHTML = "*, *::before, *::after {\n" + ["-moz-", "-o-", ""]
@@ -122,5 +127,11 @@
 		if([...el.style].includes("tab-size"))
 			el.style[TAB_SIZE] = +preferredSize || 4;
 	
-	unfuckTabstops(selector.join(", "));
+	for(const block of document.querySelectorAll(selector.join(", ")))
+		for(const node of collectTextNodes(block)){
+			const {data} = node;
+			const fixed = unfuckTabstops(data);
+			if(fixed !== data)
+				node.data = fixed;
+		}
 })();
