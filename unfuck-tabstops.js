@@ -126,6 +126,42 @@
 	for(const el of document.querySelectorAll("[style]"))
 		if([...el.style].includes("tab-size"))
 			el.style[TAB_SIZE] = +preferredSize || 4;
+
+	// CodeMirror 5
+	for(const {CodeMirror} of document.querySelectorAll(".CodeMirror")){
+		try{
+			CodeMirror.setOption("indentWithTabs", true);
+			CodeMirror.setOption("indentUnit", +preferredSize || 4);
+			CodeMirror.setValue(unfuckTabstops(CodeMirror.getValue()));
+		}
+		catch(e){}
+	}
+	
+	// CodeMirror 6
+	for(const {cmView} of document.querySelectorAll(".cm-editor [role='textbox']")){
+		try{
+			const str = cmView.editorView.state.doc.toString();
+			const re = /^(?: {2})+/gm;
+			const changes = [];
+			let match;
+			while(match = re.exec(str)){
+				const from   = match.index;
+				const to     = from + match[0].length;
+				const insert = "\t".repeat(match[0].length / 2);
+				changes.push({from, to, insert});
+			}
+			cmView.editorView.dispatch({changes});
+		}
+		catch(e){
+			console.error(e);
+		}
+	}
+	
+	// GitHub's in-browser file editor
+	for(const sizeField of document.querySelectorAll("select#indent-mode + select#indent-size")){
+		sizeField.value = 4;
+		sizeField.previousElementSibling.value = "tab";
+	}
 	
 	for(const block of document.querySelectorAll(selector.join(", ")))
 		for(const node of collectTextNodes(block)){
