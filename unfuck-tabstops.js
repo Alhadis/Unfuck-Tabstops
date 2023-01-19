@@ -85,6 +85,7 @@
 		".highlight > pre > .line span:first-child:not(:only-child)",
 		".prism-code .token-line > .token",
 		".react-code-cell",
+		".react-code-line-contents",
 		"td.blob-num + .blob-code",
 		".add-line-comment ~ .blob-code-inner",
 		"pre, code, tt",
